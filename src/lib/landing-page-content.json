@@ -1,0 +1,31 @@
+{
+  "mainHeading": "Converse com o Futuro. Construa o Impossível.",
+  "subheading": "Nyx AI é seu parceiro de conversação e desenvolvimento, pronto para ajudar a transformar ideias em realidade com poder de raciocínio avançado.",
+  "ctaButton": "Comece a Conversar",
+  "featureTag": "Nossos Recursos",
+  "featureHeading": "Uma IA com Capacidades Únicas",
+  "featureSubheading": "Desde conversas complexas até a geração de código, nossa IA está equipada com as ferramentas para levar sua criatividade ao próximo nível.",
+  "featureIcon1": "Bot",
+  "featureTitle1": "Conversação Natural",
+  "featureDescription1": "Participe de diálogos fluidos e contextuais. A IA lembra do histórico para conversas mais ricas.",
+  "featureIcon2": "Code",
+  "featureTitle2": "Geração de Código",
+  "featureDescription2": "Precisa de um script ou componente? Peça e a IA gera código limpo e funcional para você.",
+  "featureIcon3": "BrainCircuit",
+  "featureTitle3": "Raciocínio Avançado",
+  "featureDescription3": "Capaz de analisar problemas complexos, seguir instruções de múltiplos passos e analisar imagens.",
+  "themePrimaryColor": "0 0% 98%",
+  "themeBackgroundColor": "240 10% 3.9%",
+  "themeAccentColor": "240 3.7% 15.9%",
+  "dynamicElements": [],
+  "logoDataUrl": "https://raw.githubusercontent.com/RedFoxCompiler/NyxAIProject001/refs/heads/main/1000562883-removebg-preview.png",
+  "logoStyles": {
+    "filter": "saturate(1) brightness(1) contrast(1)",
+    "dropShadow": "0 0 0 #000000"
+  },
+  "styles": {
+    "mainHeading": {
+      "color": "hsl(0, 0%, 98%)"
+    }
+  }
+}

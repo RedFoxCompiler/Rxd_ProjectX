@@ -1,0 +1,143 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 224 71% 9%;
+    --card-foreground: 0 0% 98%;
+ 
+    --popover: 224 71% 4%;
+    --popover-foreground: 0 0% 98%;
+ 
+    --primary: 0 0% 80%; /* Changed to neutral gray */
+    --primary-foreground: 0 0% 9%;
+ 
+    --secondary: 0 62.8% 25%;
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 224 71% 9%;
+    --muted-foreground: 240 5% 64.9%;
+ 
+    --accent: 224 71% 14%; /* Changed to a subtle dark blue for hovers */
+    --accent-foreground: 0 0% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 224 71% 14%;
+    --input: 224 71% 14%;
+    --ring: 224 71% 14%; /* Changed to neutral dark blue */
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 224 71% 9%;
+    --card-foreground: 0 0% 98%;
+ 
+    --popover: 224 71% 4%;
+    --popover-foreground: 0 0% 98%;
+ 
+    --primary: 0 0% 80%; /* Changed to neutral gray */
+    --primary-foreground: 0 0% 9%;
+ 
+    --secondary: 0 62.8% 25%;
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 224 71% 9%;
+    --muted-foreground: 240 5% 64.9%;
+ 
+    --accent: 224 71% 14%; /* Changed to a subtle dark blue for hovers */
+    --accent-foreground: 0 0% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 224 71% 14%;
+    --input: 224 71% 14%;
+    --ring: 224 71% 14%; /* Changed to neutral dark blue */
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom utility para esconder a barra de rolagem */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE e Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer utilities {
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animation-delay-3000 {
+        animation-delay: 3s;
+    }
+
+    @keyframes gradient-animation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes background-pan {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 0% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .animated-gradient-background {
+        @apply absolute inset-0 -z-10;
+        background: linear-gradient(180deg, black 0%, hsl(var(--destructive) / 0.25) 100%);
+        background-size: 100% 300%;
+        animation: background-pan 15s ease-in-out infinite;
+    }
+
+    .animated-border-wrapper {
+        @apply relative p-[1.5px] rounded-[20px] overflow-hidden;
+        background: transparent;
+        transition: background 0.3s ease;
+    }
+
+    /* THIS is the fix. The background is removed, focus is shown with a ring. */
+    .animated-border-wrapper.is-focused {
+        @apply ring-2 ring-destructive;
+        background: transparent;
+    }
+
+    .animated-text-gradient {
+      background: linear-gradient(90deg, theme('colors.zinc.400'), theme('colors.white'), theme('colors.destructive'), theme('colors.white'), theme('colors.zinc.400'));
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradient-animation 8s ease-in-out infinite;
+    }
+}

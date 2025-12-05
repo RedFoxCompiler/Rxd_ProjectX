@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message in the conversation history between the user and the Nyx AI.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ChatMessage entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who sent the message. (Relationship: User 1:N ChatMessage)"
+        },
+        "message": {
+          "type": "string",
+          "description": "The text content of the message."
+        },
+        "isUserMessage": {
+          "type": "boolean",
+          "description": "Indicates whether the message was sent by the user (true) or the AI (false)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The date and time the message was sent.",
+          "format": "date-time"
+        },
+        "responseTimeMs": {
+          "type": "number",
+          "description": "The time it took for the AI to generate the response, in milliseconds.  Only applicable for AI messages."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "message",
+        "isUserMessage",
+        "timestamp"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Nyx AI application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. User documents are created upon successful user authentication.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, corresponding to their Firebase Auth UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/chat_messages/{messageId}",
+        "definition": {
+          "entityName": "ChatMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ChatMessage"
+          },
+          "description": "Stores chat messages for each user. Path-based ownership enables simple and robust security rules. `userId` is denormalized for authorization.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user who owns this message."
+            },
+            {
+              "name": "messageId",
+              "description": "The unique identifier of the chat message."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This design prioritizes security and scalability for the Nyx AI Enhanced application, focusing on user-specific chat message storage. It follows the core principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), QAPs (Queries Are Not Filters), and Invariants, as well as the specified design strategies. The key aspect of this structure is placing each user's chat messages within their own subcollection (`/users/{userId}/chat_messages/{messageId}`), ensuring path-based ownership and authorization independence.\n\n**Authorization Independence:** By storing chat messages in a user-specific subcollection, we avoid the need for `get()` calls in security rules to determine ownership. The path itself (`/users/{userId}/chat_messages/{messageId}`) establishes ownership, making authorization straightforward and atomic. Security rules can directly check if `request.auth.uid == userId`.\n\n**QAPs (Queries are not Filters):** Segregating chat messages into user-specific subcollections enables secure `list` operations. A user can only list messages within their own `/users/{userId}/chat_messages` collection. This design avoids filtering on the client-side based on data retrieved from the server, which is a security risk.\n\nThis structure also supports integrity by ensuring that each chat message is directly associated with a user through the hierarchical path, maintaining ownership and enabling timestamp-based ordering within each user's message history."
+  }
+}

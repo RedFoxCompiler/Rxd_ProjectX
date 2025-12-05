@@ -1,0 +1,55 @@
+/**
+ * @fileOverview Firestore Security Rules for the Nyx AI application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model. Each user has complete control over their own data, and no user can access another user's data without explicit shared access mechanisms (which are not currently implemented).
+ *
+ * Data Structure:
+ * - `/users/{userId}`: Stores user profile information.
+ * - `/users/{userId}/conversations/{conversationId}`: Stores metadata for each chat conversation.
+ * - `/users/{userId}/conversations/{conversationId}/messages/{messageId}`: Stores the actual messages for each conversation.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * Helper function to check if the requester is the owner of the document.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * @description Secures user profile documents.
+     */
+    match /users/{userId} {
+      allow get, create, update, delete: if isOwner(userId);
+      allow list: if request.auth != null; // Allow any authenticated user to list users
+    }
+    
+    /**
+     * @description Secures conversation metadata documents.
+     * A user can only manage their own conversations.
+     */
+    match /users/{userId}/conversations/{conversationId} {
+        allow get, list, create, update, delete: if isOwner(userId);
+
+        /**
+         * @description Secures chat messages within a conversation.
+         * A user can only access messages within their own conversations.
+         */
+        match /messages/{messageId} {
+           allow get, list, create, update, delete: if isOwner(userId);
+        }
+    }
+
+    /**
+     * @description DEPRECATED PATH - This path is no longer in use.
+     * Secures chat messages within a user's subcollection.
+     */
+    match /users/{userId}/chat_messages/{messageId} {
+      allow get, list, create, update, delete: if isOwner(userId);
+    }
+  }
+}
